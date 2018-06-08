@@ -14,14 +14,57 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
-## Running unit tests
+# Feladat terv
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## 1. Layout kidolgozása
 
-## Running end-to-end tests
+Legyen egy Layout page egy header menuvel, ami mindig látható.
+A következő oldalak között lehessen navigálni:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Welcome (Home)
 
-## Further help
+### Mentett játékok (Browser)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Játék
+
+## 2. Adatmodel létrehozása
+
+BoardData adatszerkezet, reprezántálja az api modelt.
+Board class létrehozása BoardData kiterjesztésével vagy beágyazásával.
+Ez az osztály dekorátor property getter-ekkel legyen kiegészítve.
+Pl: BoardFull, BoardEmpty, HasWinnerPattern stb.
+
+## 3. DataProvider létrehozása
+
+A mellékelt api funkciók hívása http mondulon keresztül.
+GET esetén Board class-t vagy listát adjon vissza.
+POST, PUT esetén BoardData interface-t megvalósító objektum paramétert várjon.
+DELETE esetén a törölni kívánt játék ID-ét.
+
+## 4. DataProvider + model tesztelése
+
+Letöltött játékból létrehozott Board class console.log-al való ellenőrzése
+
+## 5. BoardComponent létrehozása
+
+User interface komponens adatkötéssel Board class-hoz.
+A BoardComponent legyen felhasználható a játékban és a mentett játékok oldalon is.
+Lehetőleg különböző méretben is látható.
+BoardComponent további lebontása cella komponensekre.
+
+## 6. BoardComponent tesztelése
+
+A tábla grafikája megfelel-e az adatnak?
+
+## 7. Game browser oldal megvalósítása
+
+Lista megjelenítés.
+Játék megnyitás.
+Játék törlés.
+Későbbiekben lista szűrése.
+
+## 7. Game oldal megvalósítása
+
+Játék menetét controllálja.
+"comuter strategy" intelligencia kidolgozása
+Lehetőség a mentésre.
