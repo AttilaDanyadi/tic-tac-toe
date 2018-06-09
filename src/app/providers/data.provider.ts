@@ -14,6 +14,9 @@ const API_BOARD_PATH = API_BASE_PATH + '/boards';
 export class DataProvider {
     constructor(private http: Http) { }
 
+    //Create
+
+    //Read
     public GetBoard(id?: string) {
         let url = API_BOARD_PATH;
         if (id) url += "/" + id;
@@ -38,7 +41,6 @@ export class DataProvider {
                 }
             });
     }
-
     public GetBoardsByNameFragment(search: string) {
         let url = API_BOARD_PATH + '?boardNameFragment=' + search;
         return this.http.get(url)
@@ -47,5 +49,26 @@ export class DataProvider {
                 let objects: BoardData[] = response.json();
                 return objects.map(object => new Board(object));
             });
+    }
+
+    //Update
+
+    //Delete
+    public DeleteBoard(id?: string) {
+        let url = API_BOARD_PATH;
+        if (id) url += "/" + id;
+        return this.http.delete(url)
+            .map(response => {
+                return response;
+            });
+            // .catch((err: Response, caught) => {
+            //     if (err.status == 404) {
+            //         let res = (id) ? undefined : new Array<Board>();
+            //         return Observable.from([err.]);
+            //     }
+            //     else {
+            //         throw err;
+            //     }
+            // });
     }
 }

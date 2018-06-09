@@ -37,5 +37,9 @@ export class BrowserPage implements OnInit {
   }
   private Delete(id: string) {
     console.log('delete:', id);
+    this.dataProvider.DeleteBoard(id).subscribe(
+      (result) => console.log('result', result),
+      (error) => console.log('error', error)
+    );
   }
 }
