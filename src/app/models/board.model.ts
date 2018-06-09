@@ -1,11 +1,11 @@
 export interface BoardData {
     boardSize: number;
     boardName: string;
-    usersCells: Array<Cell>;
-    computersCells: Array<Cell>;
+    usersCells: Array<CellData>;
+    computersCells: Array<CellData>;
     id: string;
 }
-export interface Cell {
+export interface CellData {
     col: number;
     row: number;
 }
