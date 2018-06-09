@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/map'
 
 import { BoardData, Board } from '../models/board.model';
 
-const API_BASE_PATH = '/api';
+const API_BASE_PATH = 'http://localhost:3000/api';
 const API_BOARD_PATH = API_BASE_PATH + '/boards';
 
 @Injectable()
@@ -13,10 +14,13 @@ export class DataProvider {
 
     public GetBoard(id?: string) {
         let url = API_BOARD_PATH;
-        if (id) url += '/' + id;
+        if (id) url += "/'" + id + "'";
+        console.log(url, 'url')
         return this.http.get(API_BOARD_PATH)
             .map(response => {
+                console.log(response.status)
                 if (response.status == 404) {
+                    console.log('404')
                     return (id) ? undefined : new Array<Board>();
                 }
 
