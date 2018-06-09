@@ -10,24 +10,35 @@ export interface CellData {
     row: number;
 }
 
-type CellState = "empty" | "user" | "computer"
+type CellState = 'empty' | 'user' | 'computer';
 
-export class Matrix {
-    private rows: Array<Array<CellState>>;
+export class Cell {
+    private _x: number;
+    public get X() { return this._x; }
+    private _y: number;
+    public get Y() { return this._y; }
 
-    public GetCellState(x: number, y: number) {
-        return this.rows[y][x];
+    public State: CellState;
+
+    constructor(x: number, y: number, state?: CellState) {
+        this._x = x;
+        this._y = y;
+        this.State = (state) ? state : 'empty';
     }
-    public SetCellState(x: number, y: number, state: CellState) {
-        this.rows[y][x] = state;
+}
+export class Matrix {
+    private rows: Array<Array<Cell>>;
+
+    public GetCell(x: number, y: number) {
+        return this.rows[y][x];
     }
 
     constructor(size: number) {
-        this.rows = new Array<Array<CellState>>(size);
+        this.rows = new Array<Array<Cell>>(size);
         for (let y = 0; y < this.rows.length; y++) {
-            let row = new Array<CellState>(size);
+            let row = new Array<Cell>(size);
             for (let x = 0; x < row.length; x++) {
-                row[x] = "empty";
+                row[x] = new Cell(x, y);
             }
             this.rows[y] = row;
         }
@@ -45,10 +56,10 @@ export class Board {
     private static CovertToMatrix(data: BoardData) {
         let matrix = new Matrix(data.boardSize);
         for (let cell of data.usersCells) {
-            matrix.SetCellState(cell.col, cell.row, "user");
+            matrix.GetCell(cell.col, cell.row).State= 'user';
         }
         for (let cell of data.computersCells) {
-            matrix.SetCellState(cell.col, cell.row, "computer");
+            matrix.GetCell(cell.col, cell.row).State= 'computer';
         }
         return matrix;
     }
