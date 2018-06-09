@@ -6,7 +6,7 @@
         </div>
         <div class="row">
             <div class="col-md-3" *ngFor="let board of Boards" style="padding-bottom: 20px;">
-                <board [Board]="board"></board>
+                <board [Board]="board" [ShowOpen]="true" [ShowDelete]="true"></board>
             </div>
         </div>
     </div>

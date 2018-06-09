@@ -7,4 +7,7 @@ import { Board } from '../../models/board.model';
 })
 export class BoardComponent{
     @Input() Board: Board;
+    @Input() ShowSave: boolean;
+    @Input() ShowOpen: boolean;
+    @Input() ShowDelete: boolean;
 }
