@@ -26,13 +26,16 @@ export class BrowserPage implements OnInit {
   }
 
   private Filter() {
-    // if (!this.SearckKey){
-    //   console.log('SearckKey empty');
-    //   return;
-    // }
     this.dataProvider.GetBoardsByNameFragment(this.SearckKey).subscribe(
       (boards: Board[]) => this.Boards = boards,
       (error) => console.log('error', error)
     );
+  }
+
+  private Open(id: string) {
+    console.log('open:', id);
+  }
+  private Delete(id: string) {
+    console.log('delete:', id);
   }
 }
