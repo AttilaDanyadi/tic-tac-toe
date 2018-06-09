@@ -1,4 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { Board } from '../../models/board.model';
 import { DataProvider } from '../../providers/data.provider';
 
@@ -16,7 +18,7 @@ export class BrowserPage implements OnInit {
     this.Filter();
   }
 
-  constructor(private dataProvider: DataProvider) { }
+  constructor(private dataProvider: DataProvider, private router: Router) { }
 
   ngOnInit() {
     this.dataProvider.GetBoard().subscribe(
@@ -33,10 +35,9 @@ export class BrowserPage implements OnInit {
   }
 
   private Open(id: string) {
-    console.log('open:', id);
+    this.router.navigate(['game'], { queryParams: { id: id } });
   }
   private Delete(id: string) {
-    console.log('delete:', id);
     this.dataProvider.DeleteBoard(id).subscribe(
       (result) => console.log('result', result),
       (error) => console.log('error', error)

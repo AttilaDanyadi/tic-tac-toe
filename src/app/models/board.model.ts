@@ -1,9 +1,9 @@
 export interface BoardData {
     boardSize: number;
-    boardName: string;
+    boardName?: string;
     usersCells: Array<CellData>;
     computersCells: Array<CellData>;
-    id: string;
+    id?: string;
 }
 export interface CellData {
     col: number;
@@ -48,18 +48,26 @@ export class Board {
     public Data: BoardData;
     public Matrix: Matrix;
 
-    constructor(data: BoardData) {
-        this.Data = data;
+    constructor(data?: BoardData) {
+        if (data) {
+            this.Data = data;
+        } else {
+            this.Data = {
+                boardSize: 3,
+                usersCells: new Array<CellData>(),
+                computersCells: new Array<CellData>(),
+            };
+        }
         this.Matrix = Board.CovertToMatrix(this.Data);
     }
 
     private static CovertToMatrix(data: BoardData) {
         let matrix = new Matrix(data.boardSize);
         for (let cell of data.usersCells) {
-            matrix.GetCell(cell.col, cell.row).State= 'user';
+            matrix.GetCell(cell.col, cell.row).State = 'user';
         }
         for (let cell of data.computersCells) {
-            matrix.GetCell(cell.col, cell.row).State= 'computer';
+            matrix.GetCell(cell.col, cell.row).State = 'computer';
         }
         return matrix;
     }

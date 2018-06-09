@@ -11,12 +11,12 @@ export class BoardComponent{
     @Input() ShowOpen: boolean;
     @Input() ShowDelete: boolean;
 
-    @Output() btnSaveClick = new EventEmitter<Board>();
+    @Output() btnSaveClick = new EventEmitter();
     @Output() btnOpenClick = new EventEmitter<string>();
     @Output() btnDeleteClick = new EventEmitter<string>();
 
     private OnSave(){
-        this.btnSaveClick.emit(this.Board);
+        this.btnSaveClick.emit();
     }
     private OnOpen(){
         this.btnOpenClick.emit(this.Board.Data.id);
