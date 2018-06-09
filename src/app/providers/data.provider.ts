@@ -16,26 +16,19 @@ export class DataProvider {
     public GetBoard(id?: string) {
         let url = API_BOARD_PATH;
         if (id) url += "/" + id;
-        console.log(url, 'url')
         return this.http.get(url)
             .map(response => {
                 let json = response.json();
-                let isArray = Array.isArray(json);
-                let objects: Array<BoardData> = (isArray) ? json : [json];
-                let boards = new Array<Board>();
-                for (let object of objects) {
-                    boards.push(new Board(object));
-                }
-                if (isArray) {
-                    return boards;
-                } else {
+                let objects: Array<BoardData> = (id) ? [json] : json;
+                let boards = objects.map(object => new Board(object));
+                if (id) {
                     return (boards.length > 0) ? boards[0] : undefined;
+                } else {
+                    return boards;
                 }
             })
             .catch((err: Response, caught) => {
-                console.log(err.status)
                 if (err.status == 404) {
-                    console.log('id', id)
                     let res = (id) ? undefined : new Array<Board>();
                     return Observable.from([res]);
                 }

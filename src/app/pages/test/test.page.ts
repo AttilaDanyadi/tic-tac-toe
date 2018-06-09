@@ -14,8 +14,23 @@ export class TestPage implements OnInit {
     constructor(private dataProvider: DataProvider) { }
 
     ngOnInit() {
+        // this.dataProvider.GetBoard().subscribe(
+        //     (result: Board) => {
+        //         this.log = JSON.stringify(result);
+        //         console.log('get data', result);
+        //     },
+        //     (error) => console.log('error', error)
+        // );
 
-        this.dataProvider.GetBoard('8cyh0wf5sjhtnw6nd').subscribe(
+        // this.dataProvider.GetBoard('15p7b2kjhu9o700').subscribe(
+        //     (result: Board) => {
+        //         this.log = JSON.stringify(result);
+        //         console.log('get data', result);
+        //     },
+        //     (error) => console.log('error', error)
+        // );
+
+        this.dataProvider.GetBoard('htrhr').subscribe(
             (result: Board) => {
                 this.log = JSON.stringify(result);
                 console.log('get data', result);
