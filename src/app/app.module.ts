@@ -7,6 +7,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
 import { DataProvider } from './providers/data.provider';
+import { BoardComponent, CellComponent } from "./components/index";
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'welcome' },
@@ -27,7 +28,9 @@ const ROUTES: Routes = [
     WelcomePage,
     BrowserPage,
     GamePage,
-    TestPage
+    TestPage,
+    BoardComponent,
+    CellComponent
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },

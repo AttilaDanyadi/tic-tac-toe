@@ -27,20 +27,20 @@ export class Cell {
     }
 }
 export class Matrix {
-    private rows: Array<Array<Cell>>;
+    public Rows: Array<Array<Cell>>;
 
     public GetCell(x: number, y: number) {
-        return this.rows[y][x];
+        return this.Rows[y][x];
     }
 
     constructor(size: number) {
-        this.rows = new Array<Array<Cell>>(size);
-        for (let y = 0; y < this.rows.length; y++) {
+        this.Rows = new Array<Array<Cell>>(size);
+        for (let y = 0; y < this.Rows.length; y++) {
             let row = new Array<Cell>(size);
             for (let x = 0; x < row.length; x++) {
                 row[x] = new Cell(x, y);
             }
-            this.rows[y] = row;
+            this.Rows[y] = row;
         }
     }
 }

@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { DataProvider } from '../../providers/data.provider';
 import { BoardData, Board } from '../../models/board.model';
-import { error } from 'util';
 
 @Component({
     selector: '[test]',
@@ -10,6 +9,7 @@ import { error } from 'util';
 })
 export class TestPage implements OnInit {
     public log: string;
+    public Board: Board;
 
     constructor(private dataProvider: DataProvider) { }
 
@@ -22,20 +22,20 @@ export class TestPage implements OnInit {
         //     (error) => console.log('error', error)
         // );
 
-        // this.dataProvider.GetBoard('15p7b2kjhu9o700').subscribe(
+        this.dataProvider.GetBoard('15p7b2kjhu9o700').subscribe(
+            (board: Board) => {
+                console.log(board)
+                this.Board = board;
+            },
+            (error) => console.log('error', error)
+        );
+
+        // this.dataProvider.GetBoard('htrhr').subscribe(
         //     (result: Board) => {
         //         this.log = JSON.stringify(result);
         //         console.log('get data', result);
         //     },
         //     (error) => console.log('error', error)
         // );
-
-        this.dataProvider.GetBoard('htrhr').subscribe(
-            (result: Board) => {
-                this.log = JSON.stringify(result);
-                console.log('get data', result);
-            },
-            (error) => console.log('error', error)
-        );
     }
 }

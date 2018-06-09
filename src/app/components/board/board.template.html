@@ -1,0 +1,18 @@
+<div class="card" *ngIf="Board">
+    <div class="card-header">
+        {{Board.Data.boardName}}
+    </div>
+    <div class="card-body">
+        <div>
+            <table class="table table-bordered" style="width: 1px;">
+                <tbody>
+                    <tr *ngFor="let row of Board.Matrix.Rows">
+                        <td *ngFor="let c of row">
+                            <cell [Cell]="c"></cell>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
