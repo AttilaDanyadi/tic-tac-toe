@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/catch'
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/delay';
 
 import { BoardData, Board } from '../models/board.model';
 
@@ -19,7 +20,7 @@ export class DataProvider {
         return this.http.get(url)
             .map(response => {
                 let json = response.json();
-                let objects: Array<BoardData> = (id) ? [json] : json;
+                let objects: BoardData[] = (id) ? [json] : json;
                 let boards = objects.map(object => new Board(object));
                 if (id) {
                     return (boards.length > 0) ? boards[0] : undefined;
@@ -38,29 +39,13 @@ export class DataProvider {
             });
     }
 
-    // public GetBoardsByNameFragment(search:string){
-    //     let url = API_BOARD_PATH+'?boardNameFragment='+search;
-    //     console.log(url, 'url')
-    //     return this.http.get(API_BOARD_PATH)
-    //         .map(response => {
-    //             console.log(response.status)
-    //             if (response.status == 404) {
-    //                 console.log('404')
-    //                 return (id) ? undefined : new Array<Board>();
-    //             }
-
-    //             let json = response.json();
-    //             let isArray = Array.isArray(json);
-    //             let objects: Array<BoardData> = (isArray) ? json : [json];
-    //             let boards = new Array<Board>();
-    //             for (let object of objects) {
-    //                 boards.push(new Board(object));
-    //             }
-    //             if (isArray) {
-    //                 return boards;
-    //             } else {
-    //                 return (boards.length > 0) ? boards[0] : undefined;
-    //             }
-    //         });
-    // }
+    public GetBoardsByNameFragment(search: string) {
+        let url = API_BOARD_PATH + '?boardNameFragment=' + search;
+        return this.http.get(url)
+            .delay(1000)
+            .map(response => {
+                let objects: BoardData[] = response.json();
+                return objects.map(object => new Board(object));
+            });
+    }
 }

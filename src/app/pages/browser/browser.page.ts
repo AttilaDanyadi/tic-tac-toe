@@ -9,14 +9,29 @@ import { DataProvider } from '../../providers/data.provider';
 })
 export class BrowserPage implements OnInit {
   public Boards: Board[];
+  private _searckKey = '';
+  public get SearckKey() { return this._searckKey; }
+  public set SearckKey(value) {
+    this._searckKey = value;
+    this.Filter();
+  }
 
   constructor(private dataProvider: DataProvider) { }
 
   ngOnInit() {
     this.dataProvider.GetBoard().subscribe(
-      (boards: Board[]) => {
-        this.Boards = boards;
-      },
+      (boards: Board[]) => this.Boards = boards,
+      (error) => console.log('error', error)
+    );
+  }
+
+  private Filter() {
+    // if (!this.SearckKey){
+    //   console.log('SearckKey empty');
+    //   return;
+    // }
+    this.dataProvider.GetBoardsByNameFragment(this.SearckKey).subscribe(
+      (boards: Board[]) => this.Boards = boards,
       (error) => console.log('error', error)
     );
   }

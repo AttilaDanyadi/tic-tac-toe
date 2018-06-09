@@ -1,8 +1,13 @@
 <h1>Browser</h1>
-<div *ngIf="Boards">
-    <div class="row">
-        <div class="col-md-3" *ngFor="let board of Boards">
-            <board [Board]="board"></board>
+<form>
+    <div *ngIf="Boards">
+        <div class="form-group">
+            <input type="search" name="search" [(ngModel)]="SearckKey" placeholder="Search for game">
+        </div>
+        <div class="row">
+            <div class="col-md-3" *ngFor="let board of Boards" style="padding-bottom: 20px;">
+                <board [Board]="board"></board>
+            </div>
         </div>
     </div>
-</div>
+</form>
