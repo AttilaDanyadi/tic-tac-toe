@@ -1,1 +1,8 @@
 <h1>Browser</h1>
+<div *ngIf="Boards">
+    <div class="row">
+        <div class="col-md-3" *ngFor="let board of Boards">
+            <board [Board]="board"></board>
+        </div>
+    </div>
+</div>
