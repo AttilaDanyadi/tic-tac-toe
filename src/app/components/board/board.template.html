@@ -6,7 +6,7 @@
         <div>
             <table class="table table-bordered" style="width: 1px;">
                 <tbody>
-                    <tr *ngFor="let row of Board.Matrix.Rows">
+                    <tr *ngFor="let row of Board.Rows">
                         <td *ngFor="let cell of row">
                             <cell [Cell]="cell" (click)="OnCellClick(cell)"></cell>
                         </td>

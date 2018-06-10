@@ -11,7 +11,7 @@ import { DataProvider } from '../../providers/data.provider';
 })
 export class GamePage implements OnInit {
   public Board: Board;
-
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private dataProvider: DataProvider

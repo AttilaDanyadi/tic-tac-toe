@@ -1,10 +1,10 @@
 <h1>Game</h1>
 <div *ngIf="Board">
     <board [Board]="Board" [ShowSave]="true" (CellClick)="CellClick($event)" (btnSaveClick)="Save()"></board>
+    <p>Empty: {{Board.Empty}}</p>
+    <p>Full: {{Board.Full}}</p>
+    <p>UserCellCount: {{Board.UserCellCount}}</p>
+    <p>ComputerCellCount: {{Board.ComputerCellCount}}</p>
+    <p>NextPlayer: {{Board.NextPlayer}}</p>
+    <p>GameOver: {{Board.GameOver}}</p>
 </div>
-<p>Empty: {{Board.Empty}}</p>
-<p>Full: {{Board.Full}}</p>
-<p>UserCellCount: {{Board.UserCellCount}}</p>
-<p>ComputerCellCount: {{Board.ComputerCellCount}}</p>
-<p>NextPlayer: {{Board.NextPlayer}}</p>
-<p>GameOver: {{Board.GameOver}}</p>

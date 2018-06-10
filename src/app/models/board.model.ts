@@ -38,28 +38,15 @@ export class CellList extends List<Cell>{
         }
     }
 }
-export class Matrix {
+
+export class Board {
+    public Data: BoardData;
+    public Cells: CellList;
     public Rows: Array<Array<Cell>>;
 
     public GetCell(x: number, y: number) {
-        return this.Rows[y][x];
+        return this.Cells.Single(cell => cell.X == x && cell.Y == y);
     }
-
-    constructor(size: number) {
-        this.Rows = new Array<Array<Cell>>(size);
-        for (let y = 0; y < this.Rows.length; y++) {
-            let row = new Array<Cell>(size);
-            for (let x = 0; x < row.length; x++) {
-                row[x] = new Cell(x, y);
-            }
-            this.Rows[y] = row;
-        }
-    }
-}
-export class Board {
-    public Data: BoardData;
-    public Matrix: Matrix;
-    public Cells: CellList;
 
     public get Empty() {
         return this.Cells.TrueForAll(cell => cell.State == 'empty');
@@ -98,21 +85,25 @@ export class Board {
         }
         this.Cells = new CellList(this.Data.boardSize);
         this.FillCellList();
-        this.FillMatrix();
+        this.FillRows();
     }
 
     private FillCellList() {
-        for (let cellData of this.Data.usersCells) {
-            this.Cells.Single(i => i.X == cellData.col && i.Y == cellData.row).State = 'user';
-        }
-        for (let cellData of this.Data.computersCells) {
-            this.Cells.Single(i => i.X == cellData.col && i.Y == cellData.row).State = 'computer';
-        }
+        this.Data.usersCells.forEach(cellData=>
+            this.GetCell(cellData.col,cellData.row).State = 'user'
+        );
+        this.Data.computersCells.forEach(cellData=>
+            this.GetCell(cellData.col,cellData.row).State = 'computer'
+        );
     }
-    private FillMatrix() {
-        this.Matrix = new Matrix(this.Data.boardSize);
-        this.Matrix.Rows.forEach(row => row.forEach(cell =>
-            cell = this.Cells.Single(c => c.X == cell.X && c.Y == cell.Y)
-        ));
+    private FillRows() {
+        this.Rows = new Array<Array<Cell>>();
+        for (let y = 0; y < this.Data.boardSize; y++) {
+            let row = new Array<Cell>();
+            for (let x = 0; x < this.Data.boardSize; x++) {
+                row.push(this.GetCell(x, y))
+            }
+            this.Rows.push(row);
+        }
     }
 }
