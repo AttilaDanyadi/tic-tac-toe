@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Board } from '../../models/board.model';
+import { Board, Cell } from '../../models/board.model';
 import { DataProvider } from '../../providers/data.provider';
 
 @Component({
@@ -30,6 +30,13 @@ export class GamePage implements OnInit {
     });
   }
 
+  private CellClick(cell: Cell) {
+    //biztonság miatt ellenőrizzük a logikát
+    if (cell.State == 'empty' && this.Board.NextPlayer != 'nobody') {
+      console.log('OnCellClick');
+      cell.State = this.Board.NextPlayer;
+    }
+  }
   private Save() {
 
   }

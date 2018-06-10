@@ -11,6 +11,7 @@ export interface CellData {
 }
 
 type CellState = 'empty' | 'user' | 'computer';
+type NextPlayer = 'nobody' | 'user' | 'computer';
 
 export class Cell {
     private _x: number;
@@ -47,6 +48,10 @@ export class Matrix {
 export class Board {
     public Data: BoardData;
     public Matrix: Matrix;
+
+    public get NextPlayer(): NextPlayer {
+        return 'user';
+    }
 
     constructor(data?: BoardData) {
         if (data) {

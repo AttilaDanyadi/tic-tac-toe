@@ -7,8 +7,8 @@
             <table class="table table-bordered" style="width: 1px;">
                 <tbody>
                     <tr *ngFor="let row of Board.Matrix.Rows">
-                        <td *ngFor="let c of row">
-                            <cell [Cell]="c"></cell>
+                        <td *ngFor="let cell of row">
+                            <cell [Cell]="cell" (click)="OnCellClick(cell)"></cell>
                         </td>
                     </tr>
                 </tbody>
