@@ -113,6 +113,10 @@ export class Board {
     public get GameOver() {
         return this.GameResult != 'nobody';
     }
+    public get CanSave() {
+        return !this.Empty && this.NextPlayer != 'computer';
+    }
+
 
     public ExportData(): BoardData {
         let usersCells = new Array<CellData>();
