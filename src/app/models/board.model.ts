@@ -1,3 +1,4 @@
+import { List } from '../lib/collections';
 export interface BoardData {
     boardSize: number;
     boardName?: string;
@@ -10,7 +11,7 @@ export interface CellData {
     row: number;
 }
 
-type CellState = 'empty' | 'user' | 'computer';
+export type CellState = 'empty' | 'user' | 'computer';
 type NextPlayer = 'nobody' | 'user' | 'computer';
 
 export class Cell {
@@ -25,6 +26,16 @@ export class Cell {
         this._x = x;
         this._y = y;
         this.State = (state) ? state : 'empty';
+    }
+}
+export class CellList extends List<Cell>{
+    constructor(boardSize: number) {
+        super();
+        for (let y = 0; y < boardSize; y++) {
+            for (let x = 0; x < boardSize; x++) {
+                this.Add(new Cell(x, y, 'empty'));
+            }
+        }
     }
 }
 export class Matrix {
@@ -48,9 +59,31 @@ export class Matrix {
 export class Board {
     public Data: BoardData;
     public Matrix: Matrix;
+    public Cells: CellList;
 
+    public get Empty() {
+        return this.Cells.TrueForAll(cell => cell.State == 'empty');
+    }
+    public get Full() {
+        return this.Cells.TrueForAll(cell => cell.State != 'empty');
+    }
+    public get UserCellCount() {
+        return this.Cells.Count(cell => cell.State == 'user');
+    }
+    public get ComputerCellCount() {
+        return this.Cells.Count(cell => cell.State == 'computer');
+    }
     public get NextPlayer(): NextPlayer {
-        return 'user';
+        if (this.GameOver) {
+            return 'nobody';
+        } else {
+            return (this.UserCellCount <= this.ComputerCellCount)
+                ? 'user'
+                : 'computer';
+        }
+    }
+    public get GameOver() {
+        return this.Full;
     }
 
     constructor(data?: BoardData) {
@@ -63,17 +96,23 @@ export class Board {
                 computersCells: new Array<CellData>(),
             };
         }
-        this.Matrix = Board.CovertToMatrix(this.Data);
+        this.Cells = new CellList(this.Data.boardSize);
+        this.FillCellList();
+        this.FillMatrix();
     }
 
-    private static CovertToMatrix(data: BoardData) {
-        let matrix = new Matrix(data.boardSize);
-        for (let cell of data.usersCells) {
-            matrix.GetCell(cell.col, cell.row).State = 'user';
+    private FillCellList() {
+        for (let cellData of this.Data.usersCells) {
+            this.Cells.Single(i => i.X == cellData.col && i.Y == cellData.row).State = 'user';
         }
-        for (let cell of data.computersCells) {
-            matrix.GetCell(cell.col, cell.row).State = 'computer';
+        for (let cellData of this.Data.computersCells) {
+            this.Cells.Single(i => i.X == cellData.col && i.Y == cellData.row).State = 'computer';
         }
-        return matrix;
+    }
+    private FillMatrix() {
+        this.Matrix = new Matrix(this.Data.boardSize);
+        this.Matrix.Rows.forEach(row => row.forEach(cell =>
+            cell = this.Cells.Single(c => c.X == cell.X && c.Y == cell.Y)
+        ));
     }
 }
