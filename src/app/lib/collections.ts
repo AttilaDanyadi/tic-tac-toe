@@ -30,6 +30,11 @@ export class List<T> implements Iterable<T> {
             ? this._items.filter(selector).length
             : this._items.length;
     }
+    public First(selector?: (item: T) => boolean) {
+        let found = this.FirstOrDefault(selector);
+        if (!found) throw { error: 'No matching item!' };
+        return found;
+    }
     public FirstOrDefault(selector?: (item: T) => boolean) {
         return (selector)
             ? this._items.find(selector)

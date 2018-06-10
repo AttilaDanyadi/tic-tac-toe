@@ -12,7 +12,8 @@ export interface CellData {
 }
 
 export type CellState = 'empty' | 'user' | 'computer';
-type NextPlayer = 'nobody' | 'user' | 'computer';
+export type Player = 'nobody' | 'user' | 'computer';
+export type GameResult = 'nobody' | 'draw' | 'user' | 'computer';
 
 export class Cell {
     private _x: number;
@@ -41,11 +42,15 @@ export class CellList extends List<Cell>{
 
 export class Board {
     public Data: BoardData;
+    public get WinPatterLength() {
+        let definied: number = this.Data['winPatterLength'];
+        return (definied) ? definied : this.Data.boardSize;
+    }
     public Cells: CellList;
     public Rows: Array<Array<Cell>>;
 
     public GetCell(x: number, y: number) {
-        return this.Cells.Single(cell => cell.X == x && cell.Y == y);
+        return this.Cells.SingleOrDefault(cell => cell.X == x && cell.Y == y);
     }
 
     public get Empty() {
@@ -60,7 +65,7 @@ export class Board {
     public get ComputerCellCount() {
         return this.Cells.Count(cell => cell.State == 'computer');
     }
-    public get NextPlayer(): NextPlayer {
+    public get NextPlayer(): Player {
         if (this.GameOver) {
             return 'nobody';
         } else {
@@ -69,8 +74,40 @@ export class Board {
                 : 'computer';
         }
     }
+    public get WinnerLine() {
+        //végig megyünk az összes cellán
+        for (let cell of this.Cells.ToArray()) {
+            //keresünk balról jobbra vízszintesen
+            let line = this.GetWinnerLineLeftRight(cell);
+            if (line) return line;
+
+            //keresünk fentről lefelé függőlegesen
+            line = this.GetWinnerLineTopBottom(cell);
+            if (line) return line;
+
+            //keresünk balról jobbra átlósan lefelé
+            line = this.GetWinnerLineTopLeftBottomRight(cell);
+            if (line) return line;
+
+            //keresünk jobbról balra átlósan lefelé
+            line = this.GetWinnerLineTopRightBottomLeft(cell);
+            if (line) return line;
+        }
+        //nem találtunk semmit
+        return undefined;
+    }
+    public get GameResult(): GameResult {
+        let winnerLine = this.WinnerLine;
+        if (winnerLine) {
+            return winnerLine.First().State as GameResult;
+        } else if (this.Full) {
+            return 'draw';
+        } else {
+            return 'nobody'
+        }
+    }
     public get GameOver() {
-        return this.Full;
+        return this.GameResult != 'nobody';
     }
 
     constructor(data?: BoardData) {
@@ -87,13 +124,12 @@ export class Board {
         this.FillCellList();
         this.FillRows();
     }
-
     private FillCellList() {
-        this.Data.usersCells.forEach(cellData=>
-            this.GetCell(cellData.col,cellData.row).State = 'user'
+        this.Data.usersCells.forEach(cellData =>
+            this.GetCell(cellData.col, cellData.row).State = 'user'
         );
-        this.Data.computersCells.forEach(cellData=>
-            this.GetCell(cellData.col,cellData.row).State = 'computer'
+        this.Data.computersCells.forEach(cellData =>
+            this.GetCell(cellData.col, cellData.row).State = 'computer'
         );
     }
     private FillRows() {
@@ -105,5 +141,48 @@ export class Board {
             }
             this.Rows.push(row);
         }
+    }
+
+    private GetWinnerLineLeftRight(fromCell: Cell) {
+        return this.GetWinnerLine(
+            i => fromCell.X + i,
+            i => fromCell.Y
+        );
+    }
+    private GetWinnerLineTopBottom(fromCell: Cell) {
+        return this.GetWinnerLine(
+            i => fromCell.X,
+            i => fromCell.Y + i
+        );
+    }
+    private GetWinnerLineTopLeftBottomRight(fromCell: Cell) {
+        return this.GetWinnerLine(
+            i => fromCell.X + i,
+            i => fromCell.Y + i
+        );
+    }
+    private GetWinnerLineTopRightBottomLeft(fromCell: Cell) {
+        return this.GetWinnerLine(
+            i => fromCell.X - i,
+            i => fromCell.Y + i
+        );
+    }
+    private GetWinnerLine(
+        xTransformer: (i: number) => number,
+        yTransformer: (i: number) => number
+    ) {
+        //kigyűjtjük a cellától adott irányban lévő "3 vagyis WinPatterLength" cellát egy listába
+        let line = new List<Cell>();
+        for (let i = 0; i < this.WinPatterLength; i++) {
+            line.Add(this.GetCell(xTransformer(i), yTransformer(i)));
+        }
+        return (Board.PatternIsWinner(line)) ? line : undefined;
+    }
+    private static PatternIsWinner(line: List<Cell>) {
+        return (line.Count(cell => cell === undefined || cell.State == 'empty') > 0)
+            //Ha a vonalban van olyan cella ami kilóg a tábláról vagy üres akkor nem jó
+            ? false
+            //Ha a vonal minden eleme user vagy minden eleme computer akkor van találat
+            : line.TrueForAll(cell => cell.State == 'user') || line.TrueForAll(cell => cell.State == 'computer');
     }
 }

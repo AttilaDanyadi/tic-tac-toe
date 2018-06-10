@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule ,enableProdMode} from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,8 @@ import { AppComponent } from './app.component';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
 import { DataProvider, ComputerProvider } from './providers/index';
 import { BoardComponent, CellComponent, ConfirmModal } from "./components/index";
+
+// enableProdMode();
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'welcome' },
