@@ -15,6 +15,10 @@ export class DataProvider {
     constructor(private http: Http) { }
 
     //Create
+    public CreateBoard(boardData: BoardData) {
+        let url = API_BOARD_PATH;
+        return this.http.post(url, boardData);
+    }
 
     //Read
     public GetBoard(id?: string) {
@@ -52,23 +56,15 @@ export class DataProvider {
     }
 
     //Update
+    public SaveBoard(boardData: BoardData) {
+        let url = API_BOARD_PATH + '/' + boardData.id;
+        return this.http.put(url, boardData);
+    }
 
     //Delete
     public DeleteBoard(id?: string) {
         let url = API_BOARD_PATH;
         if (id) url += "/" + id;
-        return this.http.delete(url)
-            .map(response => {
-                return response;
-            });
-            // .catch((err: Response, caught) => {
-            //     if (err.status == 404) {
-            //         let res = (id) ? undefined : new Array<Board>();
-            //         return Observable.from([err.]);
-            //     }
-            //     else {
-            //         throw err;
-            //     }
-            // });
+        return this.http.delete(url);
     }
 }

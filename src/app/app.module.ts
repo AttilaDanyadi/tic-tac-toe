@@ -11,9 +11,9 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { AppComponent } from './app.component';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
 import { DataProvider, ComputerProvider } from './providers/index';
-import { BoardComponent, CellComponent, ConfirmModal } from "./components/index";
+import { BoardComponent, CellComponent, ConfirmModal,SaveModal } from "./components/index";
 
-// enableProdMode();
+enableProdMode();
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'welcome' },
@@ -41,10 +41,12 @@ const ROUTES: Routes = [
     TestPage,
     BoardComponent,
     CellComponent,
-    ConfirmModal
+    ConfirmModal,
+    SaveModal
   ],
   entryComponents: [
-    ConfirmModal
+    ConfirmModal,
+    SaveModal
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },

@@ -23,6 +23,10 @@ export class Cell {
 
     public State: CellState;
 
+    public get CellData(): CellData {
+        return { col: this.X, row: this.Y };
+    }
+
     constructor(x: number, y: number, state?: CellState) {
         this._x = x;
         this._y = y;
@@ -108,6 +112,30 @@ export class Board {
     }
     public get GameOver() {
         return this.GameResult != 'nobody';
+    }
+
+    public ExportData(): BoardData {
+        let usersCells = new Array<CellData>();
+        let computersCells = new Array<CellData>();
+        this.Cells.ForEach(cell => {
+            switch (cell.State) {
+                case 'user':
+                    usersCells.push(cell.CellData);
+                    break;
+                case 'computer':
+                    computersCells.push(cell.CellData);
+                    break;
+                default:
+                    break;
+            }
+        });
+        return {
+            boardSize: this.Data.boardSize,
+            boardName: this.Data.boardName,
+            usersCells: usersCells,
+            computersCells: computersCells,
+            id: this.Data.id
+        };
     }
 
     constructor(data?: BoardData) {

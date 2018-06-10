@@ -1,6 +1,12 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Response } from '@angular/http';
+
+import { Observable } from 'rxjs/Rx';
+import { DialogService } from "ng2-bootstrap-modal";
+
 import { Board, Cell, CellState } from '../../models/board.model';
+import { SaveModal, SaveDialogParams, ConfirmModal } from "../../components/index";
 import { DataProvider, ComputerProvider } from '../../providers/index';
 
 @Component({
@@ -14,6 +20,7 @@ export class GamePage implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private dialogService: DialogService,
     private dataProvider: DataProvider,
     private computerProvider: ComputerProvider
   ) { }
@@ -56,11 +63,47 @@ export class GamePage implements OnInit {
   private CellClick(cell: Cell) {
     let player = this.Board.NextPlayer;
     if (player == 'user') {
-      cell.State = player as CellState;
+      cell.State = 'user';
       this.Supervise();
     }
   }
   private Save() {
+    let caller: Observable<Response>;
+    if (this.Board.Data.id) {
+      //update
+      caller = this.dataProvider.SaveBoard(this.Board.ExportData());
+    } else {
+      //create
+      caller = this.AskForBoardName().concatMap(boardName => {
+        if (boardName) {
+          this.Board.Data.boardName = boardName;
+          return this.dataProvider.CreateBoard(this.Board.ExportData());
+        } else {
+          return undefined;
+        }
+      });
+    }
+    if (!caller) return;
+    caller.subscribe(
+      response => { },
+      (error: Response) => {
+        console.log('save', error);
+        this.dialogService.addDialog(ConfirmModal, {
+          title: 'Save game error',
+          message: 'Status: ' + error.status + ' - ' + error.statusText
+        })
+      }
+    );
+  }
 
+  private AskForBoardName() {
+    return this.dialogService
+      .addDialog(SaveModal, { title: 'Save game' })
+      .map(dialogResult => {
+        console.log(dialogResult);
+        return (dialogResult)
+          ? dialogResult.boardName
+          : undefined;
+      });
   }
 }
