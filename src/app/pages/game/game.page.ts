@@ -47,7 +47,10 @@ export class GamePage implements OnInit {
         break;
       case 'computer':
         this.computerProvider.Decide(this.Board, true).subscribe(cell => {
-          if (cell) cell.State = 'computer';
+          if (cell) {
+            cell.State = 'computer';
+            this.Board.Initial = false;
+          }
           this.Supervise();
         });
         break;
@@ -64,6 +67,7 @@ export class GamePage implements OnInit {
     let player = this.Board.NextPlayer;
     if (player == 'user') {
       cell.State = 'user';
+      this.Board.Initial = false;
       this.Supervise();
     }
   }

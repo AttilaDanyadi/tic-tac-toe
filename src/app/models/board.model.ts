@@ -113,10 +113,11 @@ export class Board {
     public get GameOver() {
         return this.GameResult != 'nobody';
     }
-    public get CanSave() {
-        return !this.Empty && this.NextPlayer != 'computer';
-    }
+    public Initial: boolean;
 
+    public get CanSave() {
+        return !this.Initial && !this.Empty && this.NextPlayer != 'computer';
+    }
 
     public ExportData(): BoardData {
         let usersCells = new Array<CellData>();
@@ -155,6 +156,7 @@ export class Board {
         this.Cells = new CellList(this.Data.boardSize);
         this.FillCellList();
         this.FillRows();
+        this.Initial = true;
     }
     private FillCellList() {
         this.Data.usersCells.forEach(cellData =>
