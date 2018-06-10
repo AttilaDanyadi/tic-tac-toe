@@ -1,8 +1,12 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
+
+import { DialogService } from "ng2-bootstrap-modal";
 
 import { Board } from '../../models/board.model';
 import { DataProvider } from '../../providers/data.provider';
+import { ConfirmModal } from "../../components/index";
 
 @Component({
   selector: '[browser]',
@@ -15,20 +19,24 @@ export class BrowserPage implements OnInit {
   public get SearckKey() { return this._searckKey; }
   public set SearckKey(value) {
     this._searckKey = value;
-    this.Filter();
+    this.LoadBoards();
   }
 
-  constructor(private dataProvider: DataProvider, private router: Router) { }
+  constructor(
+    private router: Router,
+    private dialogService: DialogService,
+    private dataProvider: DataProvider
+  ) { }
 
   ngOnInit() {
-    this.dataProvider.GetBoard().subscribe(
-      (boards: Board[]) => this.Boards = boards,
-      (error) => console.log('error', error)
-    );
+    this.LoadBoards();
   }
 
-  private Filter() {
-    this.dataProvider.GetBoardsByNameFragment(this.SearckKey).subscribe(
+  private LoadBoards() {
+    let loader = (this.SearckKey)
+      ? this.dataProvider.GetBoardsByNameFragment(this.SearckKey)
+      : this.dataProvider.GetBoard() as Observable<Board[]>
+    loader.subscribe(
       (boards: Board[]) => this.Boards = boards,
       (error) => console.log('error', error)
     );
@@ -37,10 +45,23 @@ export class BrowserPage implements OnInit {
   private Open(id: string) {
     this.router.navigate(['game'], { queryParams: { id: id } });
   }
-  private Delete(id: string) {
-    this.dataProvider.DeleteBoard(id).subscribe(
-      (result) => console.log('result', result),
-      (error) => console.log('error', error)
-    );
+  private Delete(board: Board) {
+    this.dialogService.addDialog(ConfirmModal, {
+      title: 'Delete game',
+      message: 'Do you really want to delete the game: ' + board.Data.boardName + ' ?'
+    }).subscribe(ok => {
+      if (ok) {
+        this.dataProvider
+          .DeleteBoard(board.Data.id)
+          .do(res => {
+            this.LoadBoards();
+            return res;
+          })
+          .subscribe(
+            (result) => console.log('result', result),
+            (error) => console.log('error', error)
+          );
+      }
+    });
   }
 }

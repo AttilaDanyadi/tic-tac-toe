@@ -14,7 +14,7 @@ export class BoardComponent {
     @Output() CellClick = new EventEmitter<Cell>();
     @Output() btnSaveClick = new EventEmitter();
     @Output() btnOpenClick = new EventEmitter<string>();
-    @Output() btnDeleteClick = new EventEmitter<string>();
+    @Output() btnDeleteClick = new EventEmitter<Board>();
 
     private OnCellClick(cell: Cell) {
         if (cell.State == 'empty') this.CellClick.emit(cell);
@@ -26,6 +26,6 @@ export class BoardComponent {
         this.btnOpenClick.emit(this.Board.Data.id);
     }
     private OnDelete() {
-        this.btnDeleteClick.emit(this.Board.Data.id);
+        this.btnDeleteClick.emit(this.Board);
     }
 }

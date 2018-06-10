@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from "@angular/common";
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpModule } from '@angular/http';
 
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+
 import { AppComponent } from './app.component';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
 import { DataProvider } from './providers/data.provider';
-import { BoardComponent, CellComponent } from "./components/index";
+import { BoardComponent, CellComponent, ConfirmModal } from "./components/index";
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'welcome' },
@@ -20,10 +23,13 @@ const ROUTES: Routes = [
 
 @NgModule({
   imports: [
+    CommonModule,
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(ROUTES),
-    HttpModule
+    HttpModule,
+    BootstrapModalModule,
+    BootstrapModalModule.forRoot({ container: document.body })
   ],
   declarations: [
     AppComponent,
@@ -32,7 +38,11 @@ const ROUTES: Routes = [
     GamePage,
     TestPage,
     BoardComponent,
-    CellComponent
+    CellComponent,
+    ConfirmModal
+  ],
+  entryComponents: [
+    ConfirmModal
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },

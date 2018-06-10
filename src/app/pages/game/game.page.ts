@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Board, Cell, CellState } from '../../models/board.model';
 import { DataProvider } from '../../providers/data.provider';
@@ -6,8 +6,7 @@ import { DataProvider } from '../../providers/data.provider';
 @Component({
   selector: '[game]',
   templateUrl: './game.page.html',
-  encapsulation: ViewEncapsulation.None,
-  // changeDetection: ChangeDetectionStrategy.Default
+  encapsulation: ViewEncapsulation.None
 })
 export class GamePage implements OnInit {
   public Board: Board;
@@ -33,16 +32,7 @@ export class GamePage implements OnInit {
 
   private CellClick(cell: Cell) {
     if (this.Board.NextPlayer != 'nobody') {
-      
-      console.log('currentplayer',this.Board.NextPlayer);
-      console.log('statebefore',cell.State);
-
       cell.State = this.Board.NextPlayer as CellState;
-      console.log('stateafter',cell.State);
-
-
-      console.log('board',this.Board);
-
     }
   }
   private Save() {
