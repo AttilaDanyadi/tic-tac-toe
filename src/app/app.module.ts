@@ -10,7 +10,7 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 
 import { AppComponent } from './app.component';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
-import { DataProvider } from './providers/data.provider';
+import { DataProvider, ComputerProvider } from './providers/index';
 import { BoardComponent, CellComponent, ConfirmModal } from "./components/index";
 
 const ROUTES: Routes = [
@@ -46,7 +46,8 @@ const ROUTES: Routes = [
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },
-    DataProvider
+    DataProvider,
+    ComputerProvider
   ],
   bootstrap: [AppComponent]
 })

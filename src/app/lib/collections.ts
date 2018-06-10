@@ -30,14 +30,13 @@ export class List<T> implements Iterable<T> {
             ? this._items.filter(selector).length
             : this._items.length;
     }
-    public First() {
-        return (this._items.length > 0) ? this._items[0] : undefined;
+    public FirstOrDefault(selector?: (item: T) => boolean) {
+        return (selector)
+            ? this._items.find(selector)
+            : (this._items.length > 0) ? this._items[0] : undefined;
     }
     public Where(selector: (item: T) => boolean) {
         return new List<T>(this._items.filter(selector));
-    }
-    public Find(selector: (item: T) => boolean) {
-        return this._items.find(selector);
     }
     public SingleOrDefault(selector: (item: T) => boolean) {
         return this._items.find(selector);
