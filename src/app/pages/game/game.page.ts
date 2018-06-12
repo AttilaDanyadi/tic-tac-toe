@@ -16,7 +16,27 @@ import { DataProvider, ComputerProvider } from '../../providers/index';
 })
 export class GamePage implements OnInit {
   public Board: Board;
-  private waitUser: boolean;
+  public get Message(): string {
+    switch (this.Board.GameResult) {
+      case 'nobody':
+        switch (this.Board.NextPlayer) {
+          case 'user':
+            return 'User puts...';
+          case 'computer':
+            return 'Computer puts...';
+          default:
+            return '?';
+        }
+      case 'draw':
+        return 'Draw !';
+      case 'user':
+        return 'User won :)';
+      case 'computer':
+        return 'Computer won :('
+      default:
+        return '?';
+    }
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -55,10 +75,8 @@ export class GamePage implements OnInit {
         });
         break;
       case 'nobody':
-        this.waitUser = false;
         break;
       default:
-        this.waitUser = false;
         throw { message: 'Invalid player!' }
     }
   }

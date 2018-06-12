@@ -7,20 +7,14 @@ import { Board, Cell } from '../../models/board.model';
 })
 export class BoardComponent {
     @Input() Board: Board;
-    @Input() ShowSave: boolean;
-    @Input() ShowOpen: boolean;
-    @Input() ShowDelete: boolean;
+    @Input() ShowControls: boolean;
 
     @Output() CellClick = new EventEmitter<Cell>();
-    @Output() btnSaveClick = new EventEmitter();
     @Output() btnOpenClick = new EventEmitter<string>();
     @Output() btnDeleteClick = new EventEmitter<Board>();
 
     private OnCellClick(cell: Cell) {
         if (cell.State == 'empty') this.CellClick.emit(cell);
-    }
-    private OnSave() {
-        this.btnSaveClick.emit();
     }
     private OnOpen() {
         this.btnOpenClick.emit(this.Board.Data.id);

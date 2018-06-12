@@ -16,7 +16,7 @@ import { BoardComponent, CellComponent, ConfirmModal,SaveModal } from "./compone
 enableProdMode();
 
 const ROUTES: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'welcome' },
+  { path: '', pathMatch: 'full', redirectTo: 'game' },
   { path: 'welcome', component: WelcomePage },
   { path: 'browser', component: BrowserPage },
   { path: 'game', component: GamePage },

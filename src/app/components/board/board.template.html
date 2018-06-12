@@ -1,6 +1,6 @@
 <div class="card" *ngIf="Board">
     <div class="card-header">
-        {{Board.Data.boardName}}
+        {{Board.Data.boardName || 'Untitled'}}
     </div>
     <div class="card-body">
         <div>
@@ -15,9 +15,8 @@
             </table>
         </div>
     </div>
-    <div class="card-footer">
-        <button class="btn btn-success" *ngIf="ShowSave" [disabled]="!Board.CanSave" (click)="OnSave()">Save</button>
-        <button class="btn btn-primary" *ngIf="ShowOpen" (click)="OnOpen()">Open</button>
-        <button class="btn btn-danger" *ngIf="ShowDelete" (click)="OnDelete()">Delete</button>
+    <div class="card-footer" *ngIf="ShowControls">
+        <button class="btn btn-primary" (click)="OnOpen()">Open</button>
+        <button class="btn btn-danger" (click)="OnDelete()">Delete</button>
     </div>
 </div>
