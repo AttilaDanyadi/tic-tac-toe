@@ -113,10 +113,10 @@ export class Board {
     public get GameOver() {
         return this.GameResult != 'nobody';
     }
-    public Initial: boolean;
+    public Changed=false;
 
     public get CanSave() {
-        return !this.Initial && !this.Empty && this.NextPlayer != 'computer';
+        return this.Changed && !this.Empty && this.NextPlayer != 'computer';
     }
 
     public ExportData(): BoardData {
@@ -144,7 +144,7 @@ export class Board {
     }
 
     constructor(data?: BoardData) {
-        if (data) {
+        if (data) {            
             this.Data = data;
         } else {
             this.Data = {
@@ -156,7 +156,6 @@ export class Board {
         this.Cells = new CellList(this.Data.boardSize);
         this.FillCellList();
         this.FillRows();
-        this.Initial = true;
     }
     private FillCellList() {
         this.Data.usersCells.forEach(cellData =>

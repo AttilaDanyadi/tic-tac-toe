@@ -2,12 +2,12 @@
 <div *ngIf="Board">
     <nav class="navbar navbar-light bg-light">
         <button class="btn btn-warnibg nav-item" routerLink="/browser">Browser</button>
-        <button class="btn btn-primary nav-item">New game</button>
+        <button class="btn btn-primary nav-item" (click)="StartNewGame()">New game</button>
         <button class="btn btn-success nav-item" [disabled]="!Board.CanSave" (click)="Save()">Save</button>
     </nav>
 
     <div class="alert alert-warning" role="alert">
-        <h2>{{Message}}</h2>
+        <h2 class="text-center">{{Message}}</h2>
     </div>
 
     <board [Board]="Board" [ShowControls]="false" (CellClick)="CellClick($event)"></board>

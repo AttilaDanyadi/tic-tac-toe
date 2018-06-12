@@ -69,7 +69,7 @@ export class GamePage implements OnInit {
         this.computerProvider.Decide(this.Board, true).subscribe(cell => {
           if (cell) {
             cell.State = 'computer';
-            this.Board.Initial = false;
+            this.Board.Changed = true;
           }
           this.Supervise();
         });
@@ -85,9 +85,13 @@ export class GamePage implements OnInit {
     let player = this.Board.NextPlayer;
     if (player == 'user') {
       cell.State = 'user';
-      this.Board.Initial = false;
+      this.Board.Changed = true;
       this.Supervise();
     }
+  }
+  private StartNewGame() {
+    this.Board = new Board();
+    this.Supervise();
   }
   private Save() {
     let caller: Observable<Response>;
@@ -97,17 +101,16 @@ export class GamePage implements OnInit {
     } else {
       //create
       caller = this.AskForBoardName().concatMap(boardName => {
-        if (boardName) {
+        if (boardName && boardName != '') {
           this.Board.Data.boardName = boardName;
           return this.dataProvider.CreateBoard(this.Board.ExportData());
         } else {
-          return undefined;
+          return Observable.from([undefined]);
         }
       });
     }
-    if (!caller) return;
     caller.subscribe(
-      response => { },
+      response => { if (response) this.Board.Changed = false },
       (error: Response) => {
         console.log('save', error);
         this.dialogService.addDialog(ConfirmModal, {
