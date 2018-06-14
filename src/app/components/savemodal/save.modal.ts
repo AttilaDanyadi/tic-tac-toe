@@ -15,14 +15,20 @@ export interface SaveDialogResult {
 export class SaveModal extends DialogComponent<SaveModal, SaveDialogResult> implements SaveDialogParams {
     public title: string;
     public boardName: string;
+    public Valid = true;
 
     constructor(dialogService: DialogService) {
         super(dialogService);
     }
 
     private confirm() {
-        //check name
-        this.result = { boardName: this.boardName };
-        this.close();
+        this.Valid = this.boardName &&
+            (3 <= this.boardName.length) &&
+            (this.boardName.length <= 50) &&
+            (!this.boardName.includes(' '));
+        if (this.Valid) {
+            this.result = { boardName: this.boardName };
+            this.close();
+        }
     }
 }
