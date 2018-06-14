@@ -1,10 +1,9 @@
-<div class="card" *ngIf="Board">
+<div class="card " *ngIf="Board">
     <div class="card-header">
         {{Board.Data.boardName || 'Untitled'}}
     </div>
-    <div class="card-body">
-        <div>
-            <table class="table table-bordered" style="width: 1px;">
+    <div class="card-body text-center">
+        <!-- <table class="table table-bordered" style="width: 1px;">
                 <tbody>
                     <tr *ngFor="let row of Board.Rows">
                         <td *ngFor="let cell of row">
@@ -12,7 +11,11 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
+        <div class="row" *ngFor="let row of Board.Rows">
+            <div class="col-4" *ngFor="let cell of row" style="border-width: 1px; border-color: black; border-style: solid;">
+                <cell [Cell]="cell" (click)="OnCellClick(cell)"></cell>
+            </div>
         </div>
     </div>
     <div class="card-footer" *ngIf="ShowControls">
