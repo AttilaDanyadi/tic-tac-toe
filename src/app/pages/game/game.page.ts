@@ -65,7 +65,7 @@ export class GamePage implements OnInit {
       case 'user':
         break;
       case 'computer':
-        this.computerProvider.Decide(this.Board, true).subscribe(cell => {
+        this.computerProvider.Decide(this.Board).subscribe(cell => {
           if (cell) {
             cell.State = 'computer';
             this.Board.Changed = true;

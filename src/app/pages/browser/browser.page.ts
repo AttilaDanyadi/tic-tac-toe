@@ -42,7 +42,7 @@ export class BrowserPage implements OnInit {
   }
 
   private Open(id: string) {
-    this.router.navigate(['game'], { queryParams: { id: id + 'd' } });
+    this.router.navigate(['game'], { queryParams: { id: id } });
   }
   private Delete(board: Board) {
     this.dialogService.addDialog(ConfirmModal, {

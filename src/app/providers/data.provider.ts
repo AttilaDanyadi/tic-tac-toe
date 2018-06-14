@@ -38,7 +38,7 @@ export class DataProvider {
             .catch((err: Response, caught) => {
                 console.log('catch');
                 
-                if (err.status == 400) {
+                if (err.status == 404) {
                     let res = (id) ? undefined : new Array<Board>();
                     return Observable.from([res]);
                 }

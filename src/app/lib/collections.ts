@@ -44,7 +44,10 @@ export class List<T> implements Iterable<T> {
         return new List<T>(this._items.filter(selector));
     }
     public SingleOrDefault(selector: (item: T) => boolean) {
-        return this._items.find(selector);
+        let found = this._items.filter(selector);
+        return (found.length == 1)
+            ? found[0]
+            : undefined;
     }
     public Single(selector: (item: T) => boolean) {
         let i = this.SingleOrDefault(selector);

@@ -8,9 +8,8 @@ import { HttpModule } from '@angular/http';
 import { DialogService, BootstrapModalModule } from "ng2-bootstrap-modal";
 
 import { AppComponent } from './app.component';
-import { GlobalErrorHandler } from './error.handler';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
-import { DataProvider, ComputerProvider } from './providers/index';
+import { GlobalErrorHandler,DataProvider, ComputerProvider } from './providers/index';
 import { BoardComponent, CellComponent, MessageBox, ConfirmModal, SaveModal } from "./components/index";
 
 enableProdMode();
