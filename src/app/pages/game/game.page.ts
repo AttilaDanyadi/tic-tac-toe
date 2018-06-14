@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Rx';
 import { DialogService } from "ng2-bootstrap-modal";
 
 import { Board, Cell, CellState } from '../../models/board.model';
-import { MessageBox, SaveModal, SaveDialogParams, ConfirmModal } from "../../components/index";
+import { MessageBox, SaveModal, SaveDialogParams } from "../../components/index";
 import { DataProvider, ComputerProvider } from '../../providers/index';
 
 @Component({

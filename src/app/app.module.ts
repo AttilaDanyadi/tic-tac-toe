@@ -10,7 +10,7 @@ import { DialogService, BootstrapModalModule } from "ng2-bootstrap-modal";
 import { AppComponent } from './app.component';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
 import { GlobalErrorHandler,DataProvider, ComputerProvider } from './providers/index';
-import { BoardComponent, CellComponent, MessageBox, ConfirmModal, SaveModal } from "./components/index";
+import { BoardComponent, CellComponent, MessageBox, SaveModal } from "./components/index";
 
 enableProdMode();
 
@@ -33,7 +33,6 @@ const ROUTES: Routes = [
     HttpModule
   ],
   declarations: [
-    ConfirmModal,
     MessageBox,
     AppComponent,
     WelcomePage,
@@ -46,7 +45,6 @@ const ROUTES: Routes = [
   ],
   entryComponents: [
     MessageBox,
-    ConfirmModal,
     SaveModal
   ],
   providers: [
