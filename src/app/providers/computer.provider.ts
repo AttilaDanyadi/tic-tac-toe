@@ -24,7 +24,7 @@ export class ComputerProvider {
             //sarokra
             return board.GetCell(2, 2);
         } else {
-            let userCell = board.Cells.SingleOrDefault(cell => cell.State == 'user');
+            let userCell = board.Cells.SingleOrDefault(cell => cell.State == 'x');
             console.log(userCell);
 
             if (userCell) {

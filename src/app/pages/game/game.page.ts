@@ -3,9 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/delay';
 import { DialogService } from "ng2-bootstrap-modal";
 
 import { Board, Cell, CellState } from '../../models/board.model';
+import { Computer } from '../../models/computer';
 import { MessageBox, SaveModal, SaveDialogParams } from "../../components/index";
 import { DataProvider, ComputerProvider } from '../../providers/index';
 
@@ -16,22 +18,23 @@ import { DataProvider, ComputerProvider } from '../../providers/index';
 })
 export class GamePage implements OnInit {
   public Board: Board;
+  public Computer: Computer;
   public get Message(): string {
     switch (this.Board.GameResult) {
       case 'nobody':
         switch (this.Board.NextPlayer) {
-          case 'user':
+          case 'x':
             return 'User puts...';
-          case 'computer':
+          case 'o':
             return 'Computer puts...';
           default:
             return '?';
         }
       case 'draw':
         return 'Draw !';
-      case 'user':
+      case 'x':
         return 'User won :)';
-      case 'computer':
+      case 'o':
         return 'Computer won :('
       default:
         return '?';
@@ -53,22 +56,24 @@ export class GamePage implements OnInit {
         this.dataProvider.GetBoard(id).subscribe(
           (board: Board) => {
             this.Board = board;
+            this.Computer = new Computer(this.Board, 'o');
           }
         );
       } else {
         this.Board = new Board();
+        this.Computer = new Computer(this.Board, 'o');
       }
     });
   }
 
   private Supervise() {
     switch (this.Board.NextPlayer) {
-      case 'user':
+      case 'x':
         break;
-      case 'computer':
-        this.computerProvider.Decide(this.Board).subscribe(cell => {
-          if (cell) {
-            cell.State = 'computer';
+      case 'o':
+        Observable.from([this.Computer.Put()]).delay(100).subscribe(choice => {
+          if (choice) {
+            choice.State = 'o';
             this.Board.Changed = true;
           }
           this.Supervise();
@@ -83,8 +88,8 @@ export class GamePage implements OnInit {
 
   private CellClick(cell: Cell) {
     let player = this.Board.NextPlayer;
-    if (player == 'user') {
-      cell.State = 'user';
+    if (player == 'x') {
+      cell.State = 'x';
       this.Board.Changed = true;
       this.Supervise();
     }

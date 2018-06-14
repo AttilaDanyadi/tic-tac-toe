@@ -18,7 +18,7 @@ export class List<T> implements Iterable<T> {
     }
 
     //Create
-    public Add(...items: T[]) {
+    public Add(...items:  T[]) {
         this._items.push(...items);
     }
     public AddList(list: List<T>) {

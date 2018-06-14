@@ -11,9 +11,9 @@ export interface CellData {
     row: number;
 }
 
-export type CellState = 'empty' | 'user' | 'computer';
-export type Player = 'nobody' | 'user' | 'computer';
-export type GameResult = 'nobody' | 'draw' | 'user' | 'computer';
+export type CellState = 'empty' | 'x' | 'o';
+export type Player = 'nobody' | 'x' | 'o';
+export type GameResult = 'nobody' | 'draw' | 'x' | 'o';
 
 export class Cell {
     private _x: number;
@@ -22,6 +22,9 @@ export class Cell {
     public get Y() { return this._y; }
 
     public State: CellState;
+    public get IsCenter() {
+        return this.X == 1 && this.Y == 1;
+    }
 
     public get CellData(): CellData {
         return { col: this.X, row: this.Y };
@@ -46,12 +49,17 @@ export class CellList extends List<Cell>{
 
 export class Board {
     public Data: BoardData;
+    public Changed = false;
+
     public get WinPatterLength() {
         let definied: number = this.Data['winPatterLength'];
         return (definied) ? definied : this.Data.boardSize;
     }
     public Cells: CellList;
     public Rows: Array<Array<Cell>>;
+    public LinePatterns: List<List<Cell>>;
+    public CrossPatterns: List<List<Cell>>;
+    public Patterns: List<List<Cell>>;
 
     public GetCell(x: number, y: number) {
         return this.Cells.SingleOrDefault(cell => cell.X == x && cell.Y == y);
@@ -64,18 +72,18 @@ export class Board {
         return this.Cells.TrueForAll(cell => cell.State != 'empty');
     }
     public get UserCellCount() {
-        return this.Cells.Count(cell => cell.State == 'user');
+        return this.Cells.Count(cell => cell.State == 'x');
     }
     public get ComputerCellCount() {
-        return this.Cells.Count(cell => cell.State == 'computer');
+        return this.Cells.Count(cell => cell.State == 'o');
     }
     public get NextPlayer(): Player {
         if (this.GameOver) {
             return 'nobody';
         } else {
             return (this.UserCellCount <= this.ComputerCellCount)
-                ? 'user'
-                : 'computer';
+                ? 'x'
+                : 'o';
         }
     }
     public get WinnerLine() {
@@ -113,21 +121,66 @@ export class Board {
     public get GameOver() {
         return this.GameResult != 'nobody';
     }
-    public Changed=false;
 
     public get CanSave() {
-        return this.Changed && !this.Empty && this.NextPlayer != 'computer';
+        return this.Changed && !this.Empty && this.NextPlayer != 'o';
     }
 
+    public GetAttacks(player: Player) {
+        return this.Patterns.Where(pattern =>
+            pattern.Count(cell => cell.State == player) == 2 &&
+            pattern.Count(cell => cell.State == 'empty') == 1
+        );
+    }
+    public GetPossibleAttacks(player: Player) {
+        return this.Patterns.Where(pattern =>
+            pattern.Count(cell => cell.State == player) == 1 &&
+            pattern.Count(cell => cell.State == 'empty') == 2
+        );
+    }
+    public GetPossibleDubleAttackCells(player: Player) {
+        let cells = new List<Cell>();
+        this.Cells
+            .Where(cell => cell.State == 'empty')
+            .ForEach(emptyCell => {
+                let clone = this.Clone();
+                clone.GetCell(emptyCell.X, emptyCell.Y).State = player as CellState;
+                let attacks = clone.GetAttacks(player);
+                if (attacks.Count() > 1) cells.Add(emptyCell);
+            });
+        return cells;
+    }
+    public static GetWinnerCellOfAttack(attack: List<Cell>) {
+        return attack.Single(cell => cell.State == 'empty');
+    }
+
+    constructor(data?: BoardData) {
+        this.ImportData(data);
+    }
+    private ImportData(data?: BoardData) {
+        if (data) {
+            this.Data = data;
+        } else {
+            this.Data = {
+                boardSize: 3,
+                usersCells: new Array<CellData>(),
+                computersCells: new Array<CellData>(),
+            };
+        }
+        this.Cells = new CellList(this.Data.boardSize);
+        this.FillCellList();
+        this.FillRows();
+        this.FillPatterns();
+    }
     public ExportData(): BoardData {
         let usersCells = new Array<CellData>();
         let computersCells = new Array<CellData>();
         this.Cells.ForEach(cell => {
             switch (cell.State) {
-                case 'user':
+                case 'x':
                     usersCells.push(cell.CellData);
                     break;
-                case 'computer':
+                case 'o':
                     computersCells.push(cell.CellData);
                     break;
                 default:
@@ -142,27 +195,16 @@ export class Board {
             id: this.Data.id
         };
     }
-
-    constructor(data?: BoardData) {
-        if (data) {            
-            this.Data = data;
-        } else {
-            this.Data = {
-                boardSize: 3,
-                usersCells: new Array<CellData>(),
-                computersCells: new Array<CellData>(),
-            };
-        }
-        this.Cells = new CellList(this.Data.boardSize);
-        this.FillCellList();
-        this.FillRows();
+    public Clone() {
+        return new Board(JSON.parse(JSON.stringify(this.ExportData())));
     }
+
     private FillCellList() {
         this.Data.usersCells.forEach(cellData =>
-            this.GetCell(cellData.col, cellData.row).State = 'user'
+            this.GetCell(cellData.col, cellData.row).State = 'x'
         );
         this.Data.computersCells.forEach(cellData =>
-            this.GetCell(cellData.col, cellData.row).State = 'computer'
+            this.GetCell(cellData.col, cellData.row).State = 'o'
         );
     }
     private FillRows() {
@@ -174,6 +216,43 @@ export class Board {
             }
             this.Rows.push(row);
         }
+    }
+    private FillPatterns() {
+        let pattern: List<Cell>;
+
+        this.LinePatterns = new List<List<Cell>>();
+        for (let y = 0; y < this.Data.boardSize; y++) {
+            pattern = new List<Cell>();
+            for (let x = 0; x < this.Data.boardSize; x++) {
+                pattern.Add(this.GetCell(x, y));
+            }
+            this.LinePatterns.Add(pattern);
+        }
+
+        for (let x = 0; x < this.Data.boardSize; x++) {
+            pattern = new List<Cell>();
+            for (let y = 0; y < this.Data.boardSize; y++) {
+                pattern.Add(this.GetCell(x, y));
+            }
+            this.LinePatterns.Add(pattern);
+        }
+
+        this.CrossPatterns = new List<List<Cell>>();
+        pattern = new List<Cell>();
+        for (let i = 0; i < this.Data.boardSize; i++) {
+            pattern.Add(this.GetCell(i, i));
+        }
+        this.CrossPatterns.Add(pattern);
+
+        pattern = new List<Cell>();
+        for (let i = 0; i < this.Data.boardSize; i++) {
+            pattern.Add(this.GetCell(i, this.Data.boardSize - 1 - i));
+        }
+        this.CrossPatterns.Add(pattern);
+
+        this.Patterns = new List<List<Cell>>();
+        this.Patterns.AddList(this.LinePatterns);
+        this.Patterns.AddList(this.CrossPatterns);
     }
 
     private GetWinnerLineLeftRight(fromCell: Cell) {
@@ -216,6 +295,6 @@ export class Board {
             //Ha a vonalban van olyan cella ami kilóg a tábláról vagy üres akkor nem jó
             ? false
             //Ha a vonal minden eleme user vagy minden eleme computer akkor van találat
-            : line.TrueForAll(cell => cell.State == 'user') || line.TrueForAll(cell => cell.State == 'computer');
+            : line.TrueForAll(cell => cell.State == 'x') || line.TrueForAll(cell => cell.State == 'o');
     }
 }
