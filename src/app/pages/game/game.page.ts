@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
@@ -40,6 +40,7 @@ export class GamePage implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private dialogService: DialogService,
     private dataProvider: DataProvider,
     private computerProvider: ComputerProvider
@@ -87,6 +88,37 @@ export class GamePage implements OnInit {
       this.Board.Changed = true;
       this.Supervise();
     }
+  }
+
+  private Browse() {
+    if (this.Board.Changed) {
+      new MessageBox(this.dialogService).Show({
+        title: 'Save game?',
+        message: 'Your game is not saved. Do you want to save?',
+        buttons: ['Yes', 'No', 'Cancel'],
+        icon: undefined,
+        defaultButton: 'Yes'
+      }).subscribe(dialogResult => {
+        switch (dialogResult) {
+          case 'Yes':
+            this.Save().subscribe(
+              result => this.NavigateToBrowser()
+            );
+            break;
+          case 'No':
+            this.NavigateToBrowser();
+            break;
+          default:
+            break;
+        }
+      });
+    }
+    else {
+      this.NavigateToBrowser();
+    }
+  }
+  private NavigateToBrowser() {
+    this.router.navigate(['browser']);
   }
   private StartNewGame() {
     if (this.Board.Changed) {

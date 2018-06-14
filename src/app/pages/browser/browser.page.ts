@@ -6,7 +6,7 @@ import { DialogService } from "ng2-bootstrap-modal";
 
 import { Board } from '../../models/board.model';
 import { DataProvider } from '../../providers/data.provider';
-import { ConfirmModal } from "../../components/index";
+import { MessageBox } from "../../components/index";
 
 @Component({
   selector: '[browser]',
@@ -45,21 +45,41 @@ export class BrowserPage implements OnInit {
     this.router.navigate(['game'], { queryParams: { id: id } });
   }
   private Delete(board: Board) {
-    this.dialogService.addDialog(ConfirmModal, {
-      title: 'Delete game',
-      message: 'Do you really want to delete the game: ' + board.Data.boardName + ' ?'
-    }).subscribe(ok => {
-      if (ok) {
-        this.dataProvider
-          .DeleteBoard(board.Data.id)
-          .do(res => {
-            this.LoadBoards();
-            return res;
-          })
-          .subscribe(
-            (result) => console.log('result', result),
-            (error) => console.log('error', error)
-          );
+    // this.dialogService.addDialog(ConfirmModal, {
+    //   title: 'Delete game',
+    //   message: 'Do you really want to delete the game: ' + board.Data.boardName + ' ?'
+    // }).subscribe(ok => {
+    //   if (ok) {
+    //     this.dataProvider
+    //       .DeleteBoard(board.Data.id)
+    //       .do(res => {
+    //         this.LoadBoards();
+    //         return res;
+    //       })
+    //       .subscribe(
+    //         (result) => console.log('result', result),
+    //         (error) => console.log('error', error)
+    //       );
+    //   }
+    // });
+    new MessageBox(this.dialogService).Show({
+      title: 'Delete game?',
+      message: 'Do you really want to delete the game: ' + board.Data.boardName + ' ?',
+      buttons: ['OK', 'Cancel'],
+      icon: undefined,
+      defaultButton: 'Cancel'
+    }).subscribe(dialogResult => {
+      switch (dialogResult) {
+        case 'OK':
+          this.dataProvider
+            .DeleteBoard(board.Data.id)
+            .do(res => {
+              this.LoadBoards();
+              return res;
+            }).subscribe();
+          break;
+        default:
+          break;
       }
     });
   }

@@ -13,7 +13,7 @@
                 </tbody>
             </table> -->
         <div class="row" *ngFor="let row of Board.Rows">
-            <div class="col-4" *ngFor="let cell of row" style="border-width: 1px; border-color: black; border-style: solid;">
+            <div class="col-4" *ngFor="let cell of row" style="border-width: 1px; border-color: black; border-style: solid; padding: 0px; margin: 0px;">
                 <cell [Cell]="cell" (click)="OnCellClick(cell)"></cell>
             </div>
         </div>
