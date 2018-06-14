@@ -1,0 +1,14 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">{{title}}</h4>
+            <button type="button" class="close" (click)="Return('cancel')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>{{message}}</p>
+        </div>
+        <div class="modal-footer">
+            <button *ngFor="let button of buttons" type="button" [ngClass]="GetClass(button)" (click)="Return(button)">{{button}}</button>
+        </div>
+    </div>
+</div>

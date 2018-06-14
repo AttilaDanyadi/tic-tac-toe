@@ -1,17 +1,17 @@
-import { NgModule ,enableProdMode} from '@angular/core';
+import { NgModule, enableProdMode, ErrorHandler } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpModule } from '@angular/http';
-
-import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import { DialogService, BootstrapModalModule } from "ng2-bootstrap-modal";
 
 import { AppComponent } from './app.component';
+import { GlobalErrorHandler } from './error.handler';
 import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
 import { DataProvider, ComputerProvider } from './providers/index';
-import { BoardComponent, CellComponent, ConfirmModal,SaveModal } from "./components/index";
+import { BoardComponent, CellComponent, MessageBox, ConfirmModal, SaveModal } from "./components/index";
 
 enableProdMode();
 
@@ -25,15 +25,17 @@ const ROUTES: Routes = [
 
 @NgModule({
   imports: [
+    BootstrapModalModule,
+    BootstrapModalModule.forRoot({ container: document.body }),
     CommonModule,
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(ROUTES),
-    HttpModule,
-    BootstrapModalModule,
-    BootstrapModalModule.forRoot({ container: document.body })
+    HttpModule
   ],
   declarations: [
+    ConfirmModal,
+    MessageBox,
     AppComponent,
     WelcomePage,
     BrowserPage,
@@ -41,18 +43,21 @@ const ROUTES: Routes = [
     TestPage,
     BoardComponent,
     CellComponent,
-    ConfirmModal,
     SaveModal
   ],
   entryComponents: [
+    MessageBox,
     ConfirmModal,
     SaveModal
   ],
   providers: [
+    { provide: ErrorHandler, useClass: GlobalErrorHandler},
+
     { provide: APP_BASE_HREF, useValue: '/' },
     DataProvider,
     ComputerProvider
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

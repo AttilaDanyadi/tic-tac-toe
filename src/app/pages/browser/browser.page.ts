@@ -37,13 +37,12 @@ export class BrowserPage implements OnInit {
       ? this.dataProvider.GetBoardsByNameFragment(this.SearckKey)
       : this.dataProvider.GetBoard() as Observable<Board[]>
     loader.subscribe(
-      (boards: Board[]) => this.Boards = boards,
-      (error) => console.log('error', error)
+      (boards: Board[]) => this.Boards = boards
     );
   }
 
   private Open(id: string) {
-    this.router.navigate(['game'], { queryParams: { id: id } });
+    this.router.navigate(['game'], { queryParams: { id: id + 'd' } });
   }
   private Delete(board: Board) {
     this.dialogService.addDialog(ConfirmModal, {

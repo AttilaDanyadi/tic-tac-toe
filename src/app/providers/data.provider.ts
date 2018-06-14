@@ -36,11 +36,15 @@ export class DataProvider {
                 }
             })
             .catch((err: Response, caught) => {
-                if (err.status == 404) {
+                console.log('catch');
+                
+                if (err.status == 400) {
                     let res = (id) ? undefined : new Array<Board>();
                     return Observable.from([res]);
                 }
                 else {
+                    console.log('throw');
+
                     throw err;
                 }
             });
