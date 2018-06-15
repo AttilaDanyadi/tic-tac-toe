@@ -60,18 +60,19 @@ export class GamePage implements OnInit {
           }
         );
       } else {
-        this.Board = new Board();
-        this.Computer = new Computer(this.Board, 'o');
+        this.CreateNewGame();
       }
     });
   }
 
   private Supervise() {
+    console.log('Supervise');
+
     switch (this.Board.NextPlayer) {
       case 'x':
         break;
       case 'o':
-        Observable.from([this.Computer.Put()]).delay(100).subscribe(choice => {
+        Observable.from([this.Computer.Put()]).delay(500).subscribe(choice => {
           if (choice) {
             choice.State = 'o';
             this.Board.Changed = true;
@@ -93,6 +94,16 @@ export class GamePage implements OnInit {
       this.Board.Changed = true;
       this.Supervise();
     }
+  }
+  private HelpMe() {
+    let computer = new Computer(this.Board, 'x');
+    Observable.from([computer.Put()]).delay(500).subscribe(choice => {
+      if (choice) {
+        choice.State = 'x';
+        this.Board.Changed = true;
+      }
+      this.Supervise();
+    });
   }
 
   private Browse() {
@@ -125,6 +136,7 @@ export class GamePage implements OnInit {
   private NavigateToBrowser() {
     this.router.navigate(['browser']);
   }
+
   private StartNewGame() {
     if (this.Board.Changed) {
       new MessageBox(this.dialogService).Show({
@@ -153,8 +165,10 @@ export class GamePage implements OnInit {
   }
   private CreateNewGame() {
     this.Board = new Board();
+    this.Computer = new Computer(this.Board, 'o');
     this.Supervise();
   }
+
   private Save() {
     let caller: Observable<Response>;
     if (this.Board.Data.id) {
@@ -184,7 +198,6 @@ export class GamePage implements OnInit {
     );
     return caller;
   }
-
   private AskForBoardName() {
     return this.dialogService
       .addDialog(SaveModal, { title: 'Save game' })

@@ -48,8 +48,7 @@ const ROUTES: Routes = [
     SaveModal
   ],
   providers: [
-    // { provide: ErrorHandler, useClass: GlobalErrorHandler},
-
+    { provide: ErrorHandler, useClass: GlobalErrorHandler},
     { provide: APP_BASE_HREF, useValue: '/' },
     DataProvider,
     ComputerProvider

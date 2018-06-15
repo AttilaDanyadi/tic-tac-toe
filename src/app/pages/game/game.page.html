@@ -1,9 +1,10 @@
 <h1>Game</h1>
 <div *ngIf="Board">
     <form class="form-inline">
-        <button class="btn btn-warnibg mb-2 mr-sm-2" (click)="Browse()">Browser</button>
+        <button class="btn btn-info mb-2 mr-sm-2" (click)="Browse()">Browser</button>
         <button class="btn btn-primary mb-2 mr-sm-2" [disabled]="Board.Empty || Board.NextPlayer=='computer'" (click)="StartNewGame()">New game</button>
         <button class="btn btn-success mb-2 mr-sm-2" [disabled]="!Board.CanSave" (click)="Save()">Save</button>
+        <button class="btn btn-warning mb-2 mr-sm-2" *ngIf="Board.NextPlayer=='x'" (click)="HelpMe()">Help me!</button>
     </form>
 
     <div class="alert alert-warning" role="alert">
