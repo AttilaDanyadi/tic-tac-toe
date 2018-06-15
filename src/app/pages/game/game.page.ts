@@ -9,7 +9,7 @@ import { DialogService } from "ng2-bootstrap-modal";
 import { Board, Cell, CellState } from '../../models/board.model';
 import { Computer } from '../../models/computer';
 import { MessageBox, SaveModal, SaveDialogParams } from "../../components/index";
-import { DataProvider, ComputerProvider } from '../../providers/index';
+import { DataProvider } from '../../providers/index';
 
 @Component({
   selector: '[game]',
@@ -45,8 +45,7 @@ export class GamePage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private dialogService: DialogService,
-    private dataProvider: DataProvider,
-    private computerProvider: ComputerProvider
+    private dataProvider: DataProvider
   ) { }
 
   ngOnInit() {
@@ -186,15 +185,7 @@ export class GamePage implements OnInit {
       });
     }
     caller.subscribe(
-      response => { if (response) this.Board.Changed = false },
-      (error: Response) => {
-        // console.log('save', error);
-        // this.dialogService.addDialog(ConfirmModal, {
-        //   title: 'Save game error',
-        //   message: 'Status: ' + error.status + ' - ' + error.statusText
-        // })
-        throw error;
-      }
+      response => { if (response) this.Board.Changed = false }
     );
     return caller;
   }

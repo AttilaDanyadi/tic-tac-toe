@@ -34,25 +34,11 @@ export class DataProvider {
                 } else {
                     return boards;
                 }
-            })
-            .catch((err: Response, caught) => {
-                console.log('catch');
-                
-                if (err.status == 404) {
-                    let res = (id) ? undefined : new Array<Board>();
-                    return Observable.from([res]);
-                }
-                else {
-                    console.log('throw');
-
-                    throw err;
-                }
             });
     }
     public GetBoardsByNameFragment(search: string) {
         let url = API_BOARD_PATH + '?boardNameFragment=' + search;
         return this.http.get(url)
-            .delay(1000)
             .map(response => {
                 let objects: BoardData[] = response.json();
                 return objects.map(object => new Board(object));

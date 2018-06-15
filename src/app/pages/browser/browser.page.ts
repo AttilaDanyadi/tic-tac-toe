@@ -37,7 +37,7 @@ export class BrowserPage implements OnInit {
       ? this.dataProvider.GetBoardsByNameFragment(this.SearckKey)
       : this.dataProvider.GetBoard() as Observable<Board[]>
     loader.subscribe(
-      (boards: Board[]) => this.Boards = boards
+      boards => this.Boards = boards
     );
   }
 

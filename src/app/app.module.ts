@@ -8,18 +8,16 @@ import { HttpModule } from '@angular/http';
 import { DialogService, BootstrapModalModule } from "ng2-bootstrap-modal";
 
 import { AppComponent } from './app.component';
-import { WelcomePage, BrowserPage, GamePage, TestPage } from './pages/index';
-import { GlobalErrorHandler,DataProvider, ComputerProvider } from './providers/index';
+import { GamePage, BrowserPage } from './pages/index';
+import { GlobalErrorHandler, DataProvider } from './providers/index';
 import { BoardComponent, CellComponent, MessageBox, SaveModal } from "./components/index";
 
 enableProdMode();
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'game' },
-  { path: 'welcome', component: WelcomePage },
-  { path: 'browser', component: BrowserPage },
   { path: 'game', component: GamePage },
-  { path: 'test', component: TestPage }
+  { path: 'browser', component: BrowserPage }
 ];
 
 @NgModule({
@@ -33,14 +31,12 @@ const ROUTES: Routes = [
     HttpModule
   ],
   declarations: [
-    MessageBox,
     AppComponent,
-    WelcomePage,
     BrowserPage,
     GamePage,
-    TestPage,
     BoardComponent,
     CellComponent,
+    MessageBox,
     SaveModal
   ],
   entryComponents: [
@@ -50,8 +46,7 @@ const ROUTES: Routes = [
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler},
     { provide: APP_BASE_HREF, useValue: '/' },
-    DataProvider,
-    ComputerProvider
+    DataProvider
   ],
   bootstrap: [AppComponent]
 })

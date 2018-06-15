@@ -24,9 +24,6 @@ export class Computer {
         this.Me = youAre;
         this.Opponent = (this.Me == 'x') ? 'o' : 'x';
     }
-    public Clone() {
-        return new Computer(this.Board.Clone(), this.Me);
-    }
 
     public Put() {
         let choice = this.HaUres();
